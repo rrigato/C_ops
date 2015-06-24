@@ -8,10 +8,9 @@ int main ()
   	printf("Hello World!\n");
   	scanf("%d %c %s", &value, &letter, &char_string);
   	int i =0;
-  	while (char_string[i] != "/0")
-  	{
-  	    printf("%s", char_string[i]);
-  	    i++;
-  	}
+
+  	    printf("\t%s", char_string);
+
+
   return 0;
 }
