@@ -3,7 +3,7 @@
 #include "string.h"
 //can we assume that you will use a switch
 //and the order of arguements will be ./ <executable name> cat -nET "file.txt"
-//formating of -n switch
+//formating of -n switch leaves a 
 void arguement_change ( char *, char *, char *, int, char * []);
 int cat_check ( char *);
 int main ( int argc, char * argv [])
@@ -38,9 +38,17 @@ int main ( int argc, char * argv [])
 			//element 0 will not have a switch because that has the dash for the option
 			if ( letter == '\t' && (second_arg[1] =='T' || second_arg[2] == 'T' ||second_arg[3] =='T'))
 				printf ("^I");
-			else printf("%c", letter);
-			{if (letter == '\n' && (second_arg[1]== 'n' || second_arg[2] == 'n' || second_arg[3] == 'n'))
-				{++i; printf("\t%d ", i);}
+			else 
+
+			{
+				//checks letter read in for escape clause and prints a $ if E is selected as an option BEFORE the 
+				//escape clause is shown on the screen
+				if(letter == '\n' && (second_arg[1]== 'E' || second_arg[2] == 'E' || second_arg[3] == 'E'))
+						{ printf("$");}
+				printf("%c", letter);
+				//checks letter read in for escape clause and prints line number AFTER the line is returned
+				if (letter == '\n' && (second_arg[1]== 'n' || second_arg[2] == 'n' || second_arg[3] == 'n'))
+					{++i; printf("\t%d ", i);}
 			}
 	/*i++;
 		
