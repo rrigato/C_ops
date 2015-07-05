@@ -10,14 +10,14 @@ int main ( int argc, char * argv [ ])
 	char * file_holder = NULL ;
 	file_holder = (char*)malloc(1000);
 	int buffer_size = 999;
-	int file_descriptor = read(something, O_RDONLY);
+	int file_descriptor = open(something, O_RDONLY);
 	if (file_descriptor >0)
 	{
 	printf("file open");
-	while (read(file_descriptor, file_holder, buffer_size) > 0)
+	while ((read(file_descriptor, file_holder, buffer_size)) > 0)
 		{	
 			int i =0;
-			while (file_holder != '\0')
+			while (file_holder[i] != '\0')
 			{
 				printf("%c", file_holder[i]);
 				i++;
