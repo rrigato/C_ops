@@ -51,3 +51,4 @@ void error_handle (char * words, char * error_arg)
 	perror(error_arg); 
 	exit(1);
 }
+//exits error handle
