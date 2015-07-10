@@ -73,140 +73,55 @@ void error_handle (char * words, char * error_arg)
 
 void with_switches(char * file_holder, char * switches)
 {
-	int tab = 0;
-	int line_num =0;
-	int doller_sign =0;
-	int line_and_doller =0;
-	int doller_and_tab = 0;
-	int tab_and_line = 0;
-	int all_three =0;
-	if (switches[1]=='T'|| switches[2]=='T'||switches[3]=='T')
-	{	
-		tab =1;
-	}
-	if (switches[1]=='E'|| switches[2]=='E'||switches[3]=='E')
-	{	
-		doller_sign = 1;
-	}	
-	if (switches[1]=='n'|| switches[2]=='n'||switches[3]=='n')
-	{
-		line_num = 1;
-	}
-	if ((switches[1]=='n'|| switches[2]=='n'||switches[3]=='n') && (switches[1]=='E'|| switches[2]=='E'||switches[3]=='E'))
-	{
-		line_and_doller = 1;	
-	}
-	if ((switches[1]=='T'|| switches[2]=='T'||switches[3]=='T') && (switches[1]=='E'|| switches[2]=='E'||switches[3]=='E'))
-	{
-		doller_and_tab = 1;	
-	}
-	if ((switches[1]=='T'|| switches[2]=='T'||switches[3]=='T') && (switches[1]=='n'|| switches[2]=='n'||switches[3]=='n'))
-	{
-		tab_and_line = 1;	
-	}
-	if ((switches[1]=='n'|| switches[2]=='n'||switches[3]=='n') && (switches[1]=='E'|| switches[2]=='E'||switches[3]=='E') 
-		&& (switches[1]=='T'|| switches[2]=='T'||switches[3]=='T'))
-	{
-		all_three =1;	
-	}
-
 	int i = 0;
 	int line_counter =1;
-	if (line_num)
+	if ((switches[1]== 'n' || switches[2] == 'n' || switches[3] == 'n'))
 	{
 		printf("     1  ");
 		line_counter++;
 	}
 	while (file_holder[i] != '\0')
 	{
-		/*if (tab && (file_holder[i] =='\t'))
-		{			
-			printf("^I");
-		}
-		if (doller_sign && (file_holder[i] =='\n'))
-		{
-			printf("$\n");
-		
-		}*/
 
-		if(line_and_doller==1)
+		//checks if any of elements 1-3 of second arguement have the switch of T
+		//element 0 will not have a switch because that has the dash for the option
+		if ( file_holder[i] == '\t' && (switches[1] =='T' || switches[2] == 'T' ||switches[3] =='T'))
+			printf ("^I");
+		else 
+
 		{
-			if ((file_holder[i] !='\n'))
-			{
-				printf("%c", file_holder[i]);
-			}
-			else
-			{
-				if(file_holder[i+1] == '\0')
-				{
-					printf("$");
-					printf("%c",file_holder[i]);
-					//prevents extra number at end of output
+			//checks file_holder[i] read in for escape clause and prints a $ if E is selected as an option BEFORE the 
+			//escape clause is shown on the screen
+			if(file_holder[i] == '\n' && (switches[1]== 'E' || switches[2] == 'E' || switches[3] == 'E'))
+					{ printf("$");}
+			printf("%c", file_holder[i]);
+			//checks file_holder[i] read in for escape clause and prints line number AFTER the line is returned
+			if (file_holder[i] == '\n' && (switches[1]== 'n' || switches[2] == 'n' || switches[3] == 'n'))
+				{ 
+					if(file_holder[i+1] == '\0')
+					{
+					//prevents extra number at the end
+					}
+					else
+					{
+						
+						printf("     %d  ", line_counter); line_counter++;
+					}				
 				}
-				else
-				{
-					printf("$");
-					printf("%c", file_holder[i]);
-					printf("     %d  ", line_counter);
-					line_counter++;
-				}		
-			}
-			i++;
 		}
-		if (all_three)
-		{
-			if ((file_holder[i] !='\n'))
-			{
-				if (file_holder[i] =='\t')
-				{			
-					printf("^I");
-				}
-				else
-				{
-					printf("%c", file_holder[i]);
-				}
-			}
-			else
-			{
-				if(file_holder[i+1] == '\0')
-				{
-					printf("$");
-					printf("%c",file_holder[i]);
-					//prevents extra number at end of output
-				}
-				else
-				{
-					printf("$");
-					printf("%c", file_holder[i]);
-					printf("     %d  ", line_counter);
-					line_counter++;
-				}		
-			}
-			i++;
-			
-		}
-		if (doller_and_tab)
-		{
-			if (file_holder[i] =='\t')
-				{ printf("^I"); }
-			else if (file_holder[i]=='\n')
-				{ printf("$"); printf("%c",file_holder[i]); }
-			else
-				{ printf("%c",file_holder[i]); }
-			i++;
-		}
+		i++;
 		
-		if (doller_and_tab)
-		{
-			if (file_holder[i] =='\t')
-				{ printf("^I"); }
-			else if (file_holder[i]=='\n')
-				{ printf("$"); printf("%c",file_holder[i]); }
-			else
-				{ printf("%c",file_holder[i]); }
-			i++;
-		}
 	}
 
 }
 
+void no_switches(char * file_holder)
+{
+	int i = 0;
+	while (file_holder[i] != '\0')
+	{
+		printf("%c", file_holder[i]);
+		i++;
+	}
+
+}
