@@ -84,6 +84,15 @@ int main ( int argc, char * argv [])
 		{
 			change_both(file_name);
 		}
+		else if (options ==5)
+		{
+			change_access(file_name);
+		}
+		else if(options==6)
+		{
+			change_mod(file_name);
+		}
+	
 	}
 	return 0;
 }
@@ -106,12 +115,17 @@ void change_both (char * path)
 void change_access(char * second_arg)
 {
 	struct utimbuf current_time;
-	current_time.actime ;
+	current_time.actime = 1000000;
 	current_time.modtime;
 	
 }
 void change_mod(char * second_arg)
 {
+	struct utimbuf current_time;
+	current_time.actime;
+	current_time.modtime= 1000000;
+	
+
 	
 }
 
