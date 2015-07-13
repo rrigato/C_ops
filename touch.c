@@ -1,9 +1,15 @@
+/*You need to pass a time_t data type to the utime system call in order to change
+the access and modification times. If you pass NULL to utime it will change both to the 
+current time.
+*/
+
 #include "fcntl.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
 #include "sys/time.h"
 #include "sys/types.h"
+#include "sys/stat.h"
 #include "utime.h"
 #include "time.h"
 
@@ -12,6 +18,7 @@ int touch_options( char *);
 void change_both (char *);
 void change_access(char*);
 void change_mod(char*);
+void custom_time( char *, char *);
 int main ( int argc, char * argv [])
 {
 	/*char * arg_0 = argv[0];
@@ -94,6 +101,12 @@ int main ( int argc, char * argv [])
 		}
 	
 	}
+	else if (argc ==4)
+	{
+		char * time_arg = argv[2];
+		file_name = argv[3];
+		custom_time(time_arg, file_name);
+	}
 	return 0;
 }
 void change_both (char * path)
@@ -114,7 +127,22 @@ void change_both (char * path)
 }
 void change_access(char * path)
 {
+
+	//struct with two time_t members to make the sys call to utime
 	struct utimbuf current_time;
+	struct stat original_info;
+        if ( stat( path, &original_info ) != -1 )
+        {
+		//gets the current mod time from the stat struct to make sure mod time isnt changed
+		//and applies it to the current_time utimbuf struct that 
+		//will be used in the utime syscall
+		 current_time.modtime = original_info.st_mtime; 
+        }
+	else 
+	{
+		printf("unable to open file");
+		exit(1);
+	}
 	time_t epoch_seconds;
 	time(&epoch_seconds);
 	int time = 0;	
@@ -134,7 +162,21 @@ void change_access(char * path)
 }
 void change_mod(char * path)
 {
+	//struct with two time_t members to make the sys call to utime
 	struct utimbuf current_time;
+	struct stat original_info;
+        if ( stat( path, & original_info ) != -1 )
+        {
+		//gets the current mod time from the stat struct to make sure mod time isnt changed
+		//and applies it to the current_time utimbuf struct that 
+		//will be used in the utime syscall
+		 current_time.actime = original_info.st_atime; 
+        }
+	else 
+	{
+		printf("unable to open file");
+		exit(1);
+	}
 	time_t epoch_seconds;
 	time(&epoch_seconds);
 	int time = 0;	
@@ -156,7 +198,27 @@ void change_mod(char * path)
 }
 void custom_time(char * time_arg, char * file_name)
 {
-	
+		struct tm time_struct;
+		char  month[3];
+		char day[3];
+		char hour[3];
+		char minutes[3];
+		month[0] = time_arg[0]; month[1] = time_arg[1];
+		day[0] = time_arg[2]; day[1] = time_arg[3];
+		hour[0] = time_arg[4]; hour[1] = time_arg[5];
+		minutes[0] = time_arg[6]; minutes[1] = time_arg[7];
+		time_struct.tm_year = 115;
+		time_struct.tm_min = atoi(minutes);
+		time_struct.tm_hour = atoi(hour);
+		time_struct.tm_mday = atoi(day);
+		time_struct.tm_mon = atoi(month);
+		
+	/*	printf( "%d\n",time_struct.tm_mon);
+		printf( "%d\n",time_struct.tm_mday);
+		printf( "%d\n",time_struct.tm_hour);
+		printf( "%d\n",time_struct.tm_min);
+		printf( "%d\n",time_struct.tm_year);*/
+		
 }
 
 int touch_options(char * second_arg)
@@ -222,11 +284,3 @@ int touch_options(char * second_arg)
 		
 	}
 }
-/*
-int touch_check (char * arg_0)
-{
-	char compare [] = "./touch";
-	if (!strcmp(arg_0, compare) ==0)
-		return 1;
-	return 0;
-}*/
