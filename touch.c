@@ -212,6 +212,20 @@ void custom_time(char * time_arg, char * file_name)
 		time_struct.tm_hour = atoi(hour);
 		time_struct.tm_mday = atoi(day);
 		time_struct.tm_mon = atoi(month);
+		struct utimbuf current_time;
+		current_time.actime = mktime(&time_struct);
+		current_time.modtime = mktime(&time_struct);
+		int Time = utime(file_name, &current_time);
+		if (Time == -1 )
+		{
+			printf("Error: unable to modifiy access and modification time.\n");
+			exit(1);
+		}
+		else 
+		{
+			//function changed both the access and modification time to current time.
+			printf("might of worked");
+		}
 		
 	/*	printf( "%d\n",time_struct.tm_mon);
 		printf( "%d\n",time_struct.tm_mday);
@@ -284,3 +298,5 @@ int touch_options(char * second_arg)
 		
 	}
 }
+
+
