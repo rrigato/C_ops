@@ -112,20 +112,50 @@ void change_both (char * path)
 		//function changed both the access and modification time to current time.
 	}
 }
-void change_access(char * second_arg)
+void change_access(char * path)
 {
 	struct utimbuf current_time;
-	current_time.actime = 1000000;
-	current_time.modtime;
+	time_t epoch_seconds;
+	time(&epoch_seconds);
+	int time = 0;	
+	//The mod and access times are time_t datatypes
+	current_time.actime= epoch_seconds;
+	//have to pass a reference to a utimbuf struct
+	time = utime(path, &current_time);
+	if (time == -1 )
+	{
+		printf("Error: unable to modifiy access and modification time.\n");
+		exit(1);
+	}
+	else 
+	{
+		//function changed both the access and modification time to current time.
+	}
+}
+void change_mod(char * path)
+{
+	struct utimbuf current_time;
+	time_t epoch_seconds;
+	time(&epoch_seconds);
+	int time = 0;	
+	//The mod and access times are time_t datatypes
+	current_time.modtime= epoch_seconds;
+	//have to pass a reference to a utimbuf struct
+	time = utime(path, &current_time);
+	if (time == -1 )
+	{
+		printf("Error: unable to modifiy access and modification time.\n");
+		exit(1);
+	}
+	else 
+	{
+		//function changed both the access and modification time to current time.
+	}
+	
 	
 }
-void change_mod(char * second_arg)
+void custom_time(char * time_arg, char * file_name)
 {
-	struct utimbuf current_time;
-	current_time.actime;
-	current_time.modtime= 1000000;
-	
-
 	
 }
 
