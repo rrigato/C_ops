@@ -2,7 +2,6 @@
 the access and modification times. If you pass NULL to utime it will change both to the 
 current time.
 */
-
 #include "fcntl.h"
 #include "stdio.h"
 #include "stdlib.h"
@@ -13,25 +12,14 @@ current time.
 #include "utime.h"
 #include "time.h"
 
-//int touch_check ( char *);
+
 int touch_options( char *);
 void change_both (char *);
 void change_access(char*);
 void change_mod(char*);
-void custom_time( char *, char *);
+void custom_time( char *, char *, int);
 int main ( int argc, char * argv [])
 {
-	/*char * arg_0 = argv[0];
-	if (touch_check(arg_0))
-	{
-		//good to proceed with the program
-		printf("good to go");
-	}
-	else
-	{
-		printf("Error improper system command\n");
-		exit(1);
-	}*/
 	char * option_check = NULL;
 	char * file_name = NULL;
 	option_check = argv[1];
@@ -54,58 +42,67 @@ int main ( int argc, char * argv [])
 			file_name = argv[2];
 		}
 	}
-	else
+
+	if (argc==2)
 	{
 		option_check = NULL;
 		file_name = argv[1];
 	}
-	if (argc ==2)
-	{
-		int file_descriptor = 0;
-		//two inefficient syscalls to check and see if the file exists
-		if ((file_descriptor= open(file_name, O_RDONLY))==-1)
-		{
-			int Create = 0;
-			// sets the file to rw-rw-r-- by default
-			Create = creat(file_name, 0664);
-			if (Create == -1)
-			{
-				printf("Could not create a new file");
-				exit(1);
-			}
-			else 
-			{
-				//printf("file created\n");
-				//A new file was created
-			}
-		}
-		else 
-		{
-			change_both(file_name);	
-		}
-		close (file_descriptor);	
-	}
 	else if (argc ==3)
 	{
-		if (options == 3)
-		{
-			change_both(file_name);
-		}
-		else if (options ==5)
-		{
-			change_access(file_name);
-		}
-		else if(options==6)
-		{
-			change_mod(file_name);
-		}
-	
+		file_name = argv[2];
 	}
 	else if (argc ==4)
 	{
-		char * time_arg = argv[2];
 		file_name = argv[3];
-		custom_time(time_arg, file_name);
+	}
+	
+	int file_descriptor = 0;
+	//two inefficient syscalls to check and see if the file exists
+	if ((file_descriptor= open(file_name, O_RDONLY))==-1)
+	{
+		int Create = 0;
+		// sets the file to rw-rw-r-- by default
+		Create = creat(file_name, 0664);
+		if (Create == -1)
+		{
+			printf("Could not create a new file");
+			exit(1);
+		}
+		else 
+		{
+			//printf("file created\n");
+			//A new file was created
+		}
+	}
+	else
+	{
+			if (argc ==2)
+			{
+				change_both(file_name);	
+				close (file_descriptor);	
+			}
+			else if (argc ==3)
+			{
+				if (options == 3)
+				{
+					change_both(file_name);
+				}
+				else if (options ==5)
+				{
+					change_access(file_name);
+				}
+				else if(options==6)
+				{
+					change_mod(file_name);
+				}
+			
+			}
+			else if (argc ==4)
+			{
+				char * time_arg = argv[2];
+				custom_time(time_arg, file_name, options);
+			}
 	}
 	return 0;
 }
@@ -152,7 +149,7 @@ void change_access(char * path)
 	time = utime(path, &current_time);
 	if (time == -1 )
 	{
-		printf("Error: unable to modifiy access and modification time.\n");
+		printf("Error: unable to modifiy access time.\n");
 		exit(1);
 	}
 	else 
@@ -196,7 +193,7 @@ void change_mod(char * path)
 	
 	
 }
-void custom_time(char * time_arg, char * file_name)
+void custom_time(char * time_arg, char * file_name, int options)
 {
 		struct tm time_struct;
 		char  month[3];
@@ -213,8 +210,46 @@ void custom_time(char * time_arg, char * file_name)
 		time_struct.tm_mday = atoi(day);
 		time_struct.tm_mon = atoi(month);
 		struct utimbuf current_time;
-		current_time.actime = mktime(&time_struct);
-		current_time.modtime = mktime(&time_struct);
+		if (options == 1 || options ==7)
+		{
+			current_time.actime = mktime(&time_struct);
+			current_time.modtime = mktime(&time_struct);
+		}
+		else if (options == 2)
+		{
+			current_time.modtime = mktime(&time_struct);
+			struct stat original_info;
+			if ( stat( file_name, & original_info ) != -1 )
+			{
+				//gets the current mod time from the stat struct to make sure mod time isnt changed
+				//and applies it to the current_time utimbuf struct that 
+				//will be used in the utime syscall
+				current_time.actime = original_info.st_atime; 
+			}
+			else 
+			{
+				printf("unable to open file");
+				exit(1);
+			}
+		}
+		else if (options == 4)
+		{
+			current_time.actime = mktime(&time_struct);
+			struct stat original_info;
+			if ( stat( file_name, &original_info ) != -1 )
+			{
+				//gets the current mod time from the stat struct to make sure mod time isnt changed
+				//and applies it to the current_time utimbuf struct that 
+				//will be used in the utime syscall
+				 current_time.modtime = original_info.st_mtime; 
+			}
+			else 
+			{
+				printf("unable to open file");
+				exit(1);
+			}
+			
+		}
 		int Time = utime(file_name, &current_time);
 		if (Time == -1 )
 		{
@@ -298,5 +333,4 @@ int touch_options(char * second_arg)
 		
 	}
 }
-
 
