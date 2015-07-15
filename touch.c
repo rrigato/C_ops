@@ -18,6 +18,7 @@ void change_both (char *);
 void change_access(char*);
 void change_mod(char*);
 void custom_time( char *, char *, int);
+int create_file( char *);
 int main ( int argc, char * argv [])
 {
 	char * option_check = NULL;
@@ -33,19 +34,11 @@ int main ( int argc, char * argv [])
 	if (option_check[0] =='-')
 	{
 		options = touch_options(option_check);
-		if (options ==1)
-		{
-			file_name = argv[3];
-		}
-		else
-		{
-			file_name = argv[2];
-		}
+
 	}
 
 	if (argc==2)
 	{
-		option_check = NULL;
 		file_name = argv[1];
 	}
 	else if (argc ==3)
@@ -56,31 +49,18 @@ int main ( int argc, char * argv [])
 	{
 		file_name = argv[3];
 	}
-	
-	int file_descriptor = 0;
-	//two inefficient syscalls to check and see if the file exists
-	if ((file_descriptor= open(file_name, O_RDONLY))==-1)
+	//creates the file if it dosen't exist
+	if (create_file (file_name) == 1)
 	{
-		int Create = 0;
-		// sets the file to rw-rw-r-- by default
-		Create = creat(file_name, 0664);
-		if (Create == -1)
-		{
-			printf("Could not create a new file");
-			exit(1);
-		}
-		else 
-		{
-			//printf("file created\n");
-			//A new file was created
-		}
+		//file needed to be created and was
+		if (options ==7)
+			custom_time(argv[2], argv[3], options);
 	}
 	else
 	{
 			if (argc ==2)
 			{
-				change_both(file_name);	
-				close (file_descriptor);	
+				change_both(file_name);		
 			}
 			else if (argc ==3)
 			{
@@ -106,10 +86,35 @@ int main ( int argc, char * argv [])
 	}
 	return 0;
 }
+int create_file(char * file_name)
+{
+	int file_descriptor = 0;
+	//two inefficient syscalls to check and see if the file exists
+	if ((file_descriptor= open(file_name, O_RDONLY))==-1)
+	{
+		int Create = 0;
+		// sets the file to rw-rw-r-- by default
+		Create = creat(file_name, 0664);
+		if (Create == -1)
+		{
+			printf("Could not create a new file");
+			exit(1);
+		}
+		else 
+		{
+			//A new file was created
+		}
+		
+		return 1;
+	}
+	else
+	{
+		close (file_descriptor);
+		return 0;
+	}
+}
 void change_both (char * path)
 {
-
-
 	int time = 0;	
 	time = utime(path, NULL);
 	if (time == -1 )
@@ -221,7 +226,7 @@ void custom_time(char * time_arg, char * file_name, int options)
 			struct stat original_info;
 			if ( stat( file_name, & original_info ) != -1 )
 			{
-				//gets the current mod time from the stat struct to make sure mod time isnt changed
+				//gets the current access time from the stat struct to make sure mod time isnt changed
 				//and applies it to the current_time utimbuf struct that 
 				//will be used in the utime syscall
 				current_time.actime = original_info.st_atime; 
@@ -321,8 +326,6 @@ int touch_options(char * second_arg)
 		else if ( second_arg[1] =='t')
 		{
 			result = 7; return result;
-		}
-
-		
+		}	
 	}
 }
