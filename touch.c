@@ -260,14 +260,7 @@ void custom_time(char * time_arg, char * file_name, int options)
 		{
 			//function changed both the access and modification time to current time.
 			printf("might of worked");
-		}
-		
-	/*	printf( "%d\n",time_struct.tm_mon);
-		printf( "%d\n",time_struct.tm_mday);
-		printf( "%d\n",time_struct.tm_hour);
-		printf( "%d\n",time_struct.tm_min);
-		printf( "%d\n",time_struct.tm_year);*/
-		
+		}		
 }
 
 int touch_options(char * second_arg)
@@ -333,4 +326,3 @@ int touch_options(char * second_arg)
 		
 	}
 }
-
