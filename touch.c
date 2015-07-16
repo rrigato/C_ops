@@ -13,7 +13,6 @@ current time.
 #include "utime.h"
 #include "time.h"
 
-//int touch_check ( char *);
 int touch_options( char *);
 void change_both (char *);
 void change_access(char*);
@@ -21,17 +20,6 @@ void change_mod(char*);
 void custom_time( char *, char *, int);
 int main ( int argc, char * argv [])
 {
-	/*char * arg_0 = argv[0];
-	if (touch_check(arg_0))
-	{
-		//good to proceed with the program
-		printf("good to go");
-	}
-	else
-	{
-		printf("Error improper system command\n");
-		exit(1);
-	}*/
 	char * option_check = NULL;
 	char * file_name = NULL;
 	option_check = argv[1];
@@ -45,7 +33,7 @@ int main ( int argc, char * argv [])
 	if (option_check[0] =='-')
 	{
 		options = touch_options(option_check);
-		if (options ==1)
+		if (options ==1||options==2||options==4||options==4)
 		{
 			file_name = argv[3];
 		}
@@ -73,7 +61,6 @@ int main ( int argc, char * argv [])
 		}
 		else 
 		{
-			//printf("file created\n");
 			//A new file was created
 		}
 	}	
@@ -81,7 +68,7 @@ int main ( int argc, char * argv [])
 	{
 		close(file_descriptor);
 	}
-	if (argc ==2)
+	if (argc ==2)//no options
 	{
 			change_both(file_name);		
 	}
@@ -101,7 +88,7 @@ int main ( int argc, char * argv [])
 		}
 	
 	
-	if (options ==7)
+	if (options ==1)
 	{
 		if (argc==4)
 		{
@@ -115,6 +102,24 @@ int main ( int argc, char * argv [])
 			exit(1);
 		}
 	}
+	
+	if (options ==2)
+	{
+		if (argc==4)
+		{
+			char * time_arg = argv[2];
+			file_name = argv[3];
+			custom_time(time_arg, file_name, options);
+		}
+		else 
+		{
+			printf("error incorrect number of arguements\n");
+			exit(1);
+		}
+	}
+	
+	
+	
 	return 0;
 }
 void change_both (char * path)
@@ -335,7 +340,5 @@ int touch_options(char * second_arg)
 		{
 			result = 7; return result;
 		}
-
-		
 	}
 }
