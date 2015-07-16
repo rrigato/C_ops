@@ -33,7 +33,7 @@ int main ( int argc, char * argv [])
 	if (option_check[0] =='-')
 	{
 		options = touch_options(option_check);
-		if (options ==1||options==2||options==4||options==4)
+		if (options ==1||options==2||options==4||options==7)
 		{
 			file_name = argv[3];
 		}
@@ -117,7 +117,35 @@ int main ( int argc, char * argv [])
 			exit(1);
 		}
 	}
+	if (options ==4)
+	{
+		if (argc==4)
+		{
+			char * time_arg = argv[2];
+			file_name = argv[3];
+			custom_time(time_arg, file_name, options);
+		}
+		else 
+		{
+			printf("error incorrect number of arguements\n");
+			exit(1);
+		}
+	}	
 	
+	if (options ==7)
+	{
+		if (argc==4)
+		{
+			char * time_arg = argv[2];
+			file_name = argv[3];
+			custom_time(time_arg, file_name, options);
+		}
+		else 
+		{
+			printf("error incorrect number of arguements\n");
+			exit(1);
+		}
+	}	
 	
 	
 	return 0;
