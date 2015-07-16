@@ -2,6 +2,7 @@
 the access and modification times. If you pass NULL to utime it will change both to the 
 current time.
 */
+
 #include "fcntl.h"
 #include "stdio.h"
 #include "stdlib.h"
@@ -12,15 +13,25 @@ current time.
 #include "utime.h"
 #include "time.h"
 
-
+//int touch_check ( char *);
 int touch_options( char *);
 void change_both (char *);
 void change_access(char*);
 void change_mod(char*);
 void custom_time( char *, char *, int);
-int create_file( char *);
 int main ( int argc, char * argv [])
 {
+	/*char * arg_0 = argv[0];
+	if (touch_check(arg_0))
+	{
+		//good to proceed with the program
+		printf("good to go");
+	}
+	else
+	{
+		printf("Error improper system command\n");
+		exit(1);
+	}*/
 	char * option_check = NULL;
 	char * file_name = NULL;
 	option_check = argv[1];
@@ -34,60 +45,20 @@ int main ( int argc, char * argv [])
 	if (option_check[0] =='-')
 	{
 		options = touch_options(option_check);
-
-	}
-
-	if (argc==2)
-	{
-		file_name = argv[1];
-	}
-	else if (argc ==3)
-	{
-		file_name = argv[2];
-	}
-	else if (argc ==4)
-	{
-		file_name = argv[3];
-	}
-	//creates the file if it dosen't exist
-	if (create_file (file_name) == 1)
-	{
-		//file needed to be created and was
-		if (options ==7)
-			custom_time(argv[2], argv[3], options);
+		if (options ==1)
+		{
+			file_name = argv[3];
+		}
+		else
+		{
+			file_name = argv[2];
+		}
 	}
 	else
 	{
-			if (argc ==2)
-			{
-				change_both(file_name);		
-			}
-			else if (argc ==3)
-			{
-				if (options == 3)
-				{
-					change_both(file_name);
-				}
-				else if (options ==5)
-				{
-					change_access(file_name);
-				}
-				else if(options==6)
-				{
-					change_mod(file_name);
-				}
-			
-			}
-			else if (argc ==4)
-			{
-				char * time_arg = argv[2];
-				custom_time(time_arg, file_name, options);
-			}
+		option_check = NULL;
+		file_name = argv[1];
 	}
-	return 0;
-}
-int create_file(char * file_name)
-{
 	int file_descriptor = 0;
 	//two inefficient syscalls to check and see if the file exists
 	if ((file_descriptor= open(file_name, O_RDONLY))==-1)
@@ -102,19 +73,54 @@ int create_file(char * file_name)
 		}
 		else 
 		{
+			//printf("file created\n");
 			//A new file was created
 		}
-		
-		return 1;
-	}
+	}	
 	else
 	{
-		close (file_descriptor);
-		return 0;
+		close(file_descriptor);
 	}
+	if (argc ==2)
+	{
+			change_both(file_name);		
+	}
+
+	// for -ma -a and -m
+		if (options == 3)
+		{
+			change_both(file_name);
+		}
+		else if (options ==5)
+		{
+			change_access(file_name);
+		}
+		else if(options==6)
+		{
+			change_mod(file_name);
+		}
+	
+	
+	if (options ==7)
+	{
+		if (argc==4)
+		{
+			char * time_arg = argv[2];
+			file_name = argv[3];
+			custom_time(time_arg, file_name, options);
+		}
+		else 
+		{
+			printf("error incorrect number of arguements");
+			exit(1);
+		}
+	}
+	return 0;
 }
 void change_both (char * path)
 {
+
+
 	int time = 0;	
 	time = utime(path, NULL);
 	if (time == -1 )
@@ -154,7 +160,7 @@ void change_access(char * path)
 	time = utime(path, &current_time);
 	if (time == -1 )
 	{
-		printf("Error: unable to modifiy access time.\n");
+		printf("Error: unable to modifiy access and modification time.\n");
 		exit(1);
 	}
 	else 
@@ -200,6 +206,7 @@ void change_mod(char * path)
 }
 void custom_time(char * time_arg, char * file_name, int options)
 {
+
 		struct tm time_struct;
 		char  month[3];
 		char day[3];
@@ -210,10 +217,10 @@ void custom_time(char * time_arg, char * file_name, int options)
 		hour[0] = time_arg[4]; hour[1] = time_arg[5];
 		minutes[0] = time_arg[6]; minutes[1] = time_arg[7];
 		time_struct.tm_year = 115;
-		time_struct.tm_min = atoi(minutes);
-		time_struct.tm_hour = atoi(hour);
+		time_struct.tm_min = atoi(minutes)  ;
+		time_struct.tm_hour = atoi(hour) ;
 		time_struct.tm_mday = atoi(day);
-		time_struct.tm_mon = atoi(month);
+		time_struct.tm_mon = atoi(month) -1;
 		struct utimbuf current_time;
 		if (options == 1 || options ==7)
 		{
@@ -254,7 +261,7 @@ void custom_time(char * time_arg, char * file_name, int options)
 				exit(1);
 			}
 			
-		}
+		}		
 		int Time = utime(file_name, &current_time);
 		if (Time == -1 )
 		{
@@ -264,8 +271,9 @@ void custom_time(char * time_arg, char * file_name, int options)
 		else 
 		{
 			//function changed both the access and modification time to current time.
-			printf("might of worked");
-		}		
+			
+		}
+			
 }
 
 int touch_options(char * second_arg)
@@ -326,6 +334,8 @@ int touch_options(char * second_arg)
 		else if ( second_arg[1] =='t')
 		{
 			result = 7; return result;
-		}	
+		}
+
+		
 	}
 }
