@@ -14,7 +14,8 @@ int main ( int argc, char * argv [ ])
 		exit (1);
 	}
 	char * permission_change = argv[1];
-	int value = atoi(permission_change);
+
+	int value = strtol(permission_change, NULL, 8);
 	char * file_name = argv[2];
 	int outcome = 0;
 	outcome = chmod(file_name, value);
