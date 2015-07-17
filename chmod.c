@@ -1,5 +1,3 @@
-//I just passed it a decimal number is that correct?
-//converted the char to integer using atoi()
 #include "fcntl.h"
 #include "stdlib.h"
 #include "stdio.h"
@@ -12,7 +10,7 @@ int main ( int argc, char * argv [ ])
 	if (argc !=3)
 	{
 		printf ("chmod: missing operand \n");
-		printf("Try 'chmod --help' for more information");
+		printf("Try 'chmod --help' for more information\n");
 		exit (1);
 	}
 	char * permission_change = argv[1];
@@ -22,9 +20,7 @@ int main ( int argc, char * argv [ ])
 	outcome = chmod(file_name, value);
 	if (outcome == -1 )
 		error_handle("Error reading argument: ", file_name);
-	else 
-		printf("It surprisingly worked.");
-	
+	//The system call worked 
 	
 }
 
