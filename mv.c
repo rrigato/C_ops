@@ -2,11 +2,13 @@
 #include "stdio.h"
 #include "fcntl.h"
 #include "sys/stat.h"
+#include "unistd.h"
 
 void arg_check(int);
 void error_handle( char *, char *);
 void file_check( char *);
 int directory_check (char *);
+int is_file(char*);
 int main(int argc, char * argv[])
 {
 	arg_check(argc);
@@ -21,7 +23,25 @@ int main(int argc, char * argv[])
 		int result = rename(original_file, target_destination);
 		if (result ==-1)
 		{
-			printf("error: unable to move file\n"); 
+			perror(target_destination);
+		}
+	}
+	else
+	{
+		int value = 0;
+		value = link(original_file,target_destination);
+		if(value != -1)
+		{
+			int unlinked =0;
+			unlinked = unlink(original_file);
+			if (unlinked == -1)
+			{
+				printf("Error: unable to remove file\n");
+			}
+		}
+		else
+		{
+			printf("Error: unable to move file\n");
 		}
 	}
 	
@@ -54,6 +74,7 @@ void file_check(char * original_file)
 	}
 
 }
+
 int directory_check( char * target_destination)
 {
 	struct stat information;
@@ -69,7 +90,6 @@ int directory_check( char * target_destination)
 	}
 	else
 	{
-		printf("Error: unable to access file properties\n");
+		return 0;
 	}
 }
-
