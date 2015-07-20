@@ -10,7 +10,8 @@ void error_handle( char *, char *);
 void file_check( char *);
 int directory_check (char *);
 int is_file(char*);
-void its_directory( char *, char *);
+void its_a_directory( char *, char *);
+void its_a_file( char *, char *);
 int main(int argc, char * argv[])
 {
 	arg_check(argc);
@@ -22,11 +23,18 @@ int main(int argc, char * argv[])
 	return_value = directory_check(target_destination);
 	if (return_value)
 	{
-		its_directory(original_file, target_destination);
+		its_a_directory(original_file, target_destination);
 
 	}
 	else
 	{
+		its_a_file(original_file,target_destination);
+	}
+	
+	return 0;
+}
+void its_a_file(char * original_file, char * target_destination)
+{
 		int value = 0;
 		value = link(original_file,target_destination);
 		if(value != -1)
@@ -35,18 +43,18 @@ int main(int argc, char * argv[])
 			unlinked = unlink(original_file);
 			if (unlinked == -1)
 			{
-				perror("Error: unable to remove file\n");
+				perror("Error: unable to remove file\n"); 
+				exit(1);
 			}
 		}
 		else
 		{
 			printf("Error: unable to move file\n");
+			exit(1);
 		}
-	}
 	
-	return 0;
 }
-void its_director(char * original_file, char * target_destination)
+void its_a_directory(char * original_file, char * target_destination)
 {
 		char appended_string [1000];
 		strcpy(appended_string, target_destination);
@@ -56,6 +64,7 @@ void its_director(char * original_file, char * target_destination)
 		if (result ==-1)
 		{
 			perror(target_destination);
+			exit(1);
 		}
 		else
 		{
@@ -64,6 +73,7 @@ void its_director(char * original_file, char * target_destination)
 			if (result2 ==-1)
 			{
 				perror("Error: unable to remove file\n");
+				exit(1);
 			}
 			
 		}
