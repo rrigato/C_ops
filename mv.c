@@ -3,12 +3,14 @@
 #include "fcntl.h"
 #include "sys/stat.h"
 #include "unistd.h"
+#include "string.h"
 
 void arg_check(int);
 void error_handle( char *, char *);
 void file_check( char *);
 int directory_check (char *);
 int is_file(char*);
+void its_directory( char *, char *);
 int main(int argc, char * argv[])
 {
 	arg_check(argc);
@@ -20,11 +22,8 @@ int main(int argc, char * argv[])
 	return_value = directory_check(target_destination);
 	if (return_value)
 	{
-		int result = rename(original_file, target_destination);
-		if (result ==-1)
-		{
-			perror(target_destination);
-		}
+		its_directory(original_file, target_destination);
+
 	}
 	else
 	{
@@ -36,7 +35,7 @@ int main(int argc, char * argv[])
 			unlinked = unlink(original_file);
 			if (unlinked == -1)
 			{
-				printf("Error: unable to remove file\n");
+				perror("Error: unable to remove file\n");
 			}
 		}
 		else
@@ -46,6 +45,28 @@ int main(int argc, char * argv[])
 	}
 	
 	return 0;
+}
+void its_director(char * original_file, char * target_destination)
+{
+		char appended_string [1000];
+		strcpy(appended_string, target_destination);
+		strcat(appended_string, "/");
+		strcat(appended_string, original_file);
+		int result = link(original_file, appended_string);
+		if (result ==-1)
+		{
+			perror(target_destination);
+		}
+		else
+		{
+			int result2;
+			result2 = unlink (original_file);
+			if (result2 ==-1)
+			{
+				perror("Error: unable to remove file\n");
+			}
+			
+		}
 }
 
 
@@ -82,7 +103,6 @@ int directory_check( char * target_destination)
 	system_check = stat(target_destination, &information);
 	if(system_check != -1)
 	{
-		printf("%d\n", (int)information.st_mode);
 		if (S_ISDIR(information.st_mode))
 		{
 			return 1;
@@ -93,3 +113,4 @@ int directory_check( char * target_destination)
 		return 0;
 	}
 }
+
