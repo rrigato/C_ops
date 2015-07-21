@@ -54,6 +54,8 @@ void its_a_file(char * original_file, char * target_destination)
 		}
 	
 }
+//appends the original file name to the directory
+//this allows use of link and unlink to change the file
 void its_a_directory(char * original_file, char * target_destination)
 {
 		char appended_string [1000];
