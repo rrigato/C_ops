@@ -36,48 +36,26 @@ int main(int argc, char * argv[])
 void its_a_file(char * original_file, char * target_destination)
 {
 		int value = 0;
-		value = link(original_file,target_destination);
-		if(value != -1)
-		{
-			int unlinked =0;
-			unlinked = unlink(original_file);
-			if (unlinked == -1)
-			{
-				perror("Error: unable to remove file\n"); 
-				exit(1);
-			}
-		}
-		else
+		value = rename(original_file,target_destination);
+		if(value == -1)
 		{
 			printf("Error: unable to move file\n");
 			exit(1);
 		}
+
 	
 }
-//appends the original file name to the directory
-//this allows use of link and unlink to change the file
 void its_a_directory(char * original_file, char * target_destination)
 {
 		char appended_string [1000];
 		strcpy(appended_string, target_destination);
 		strcat(appended_string, "/");
 		strcat(appended_string, original_file);
-		int result = link(original_file, appended_string);
+		int result = rename(original_file, appended_string);
 		if (result ==-1)
 		{
 			perror(target_destination);
 			exit(1);
-		}
-		else
-		{
-			int result2;
-			result2 = unlink (original_file);
-			if (result2 ==-1)
-			{
-				perror("Error: unable to remove file\n");
-				exit(1);
-			}
-			
 		}
 }
 
