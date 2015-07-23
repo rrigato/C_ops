@@ -103,4 +103,3 @@ int directory_check( char * target_destination)
 		return 0;
 	}
 }
-
