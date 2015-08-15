@@ -1,7 +1,7 @@
 #include "stdio.h"
 #include "signal.h"
 #include "stdlib.h"
-#define n 90000
+#define n 1000000
 void sieve();
 void display();
 void display2();
@@ -22,11 +22,10 @@ int main (int argc, char * argv[])
 void sieve()
 {
 
-	int i=2;
-	int j = 0;
-	int u = 0;
+	long i=2;
+	long j = 0;
+	long u = 0;
 	int Table[n];
-	int z = 1;
 	
 		    
 	for (; i < n; i++) //sets all numbers to 'prime'
@@ -40,18 +39,19 @@ void sieve()
 				Table[i*j]=0;
 		}
 			u =2;
-			while(u <i)
+			while(u < n && u <i)
 			{ 
-				if (Table[u] )
+				if (Table[u] && u > max)
 			  	{
 					max = u;
+					
 					
 				}
 				u++;	   
 			}
 		
 	}
-	printf("%d ", max);
+
 
 }
 
