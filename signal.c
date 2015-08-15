@@ -1,15 +1,15 @@
 #include "stdio.h"
 #include "signal.h"
 #include "stdlib.h"
-#include "math.h"
-#define n 100000000
+#define n 90000
 void sieve();
-void display(int);
-void display2(int);
+void display();
+void display2();
+int max;
 int main (int argc, char * argv[])
 {
-	printf("%d\n", n);
-	int Continue = 1;
+
+	max = 0;
 	signal(SIGINT,SIG_IGN);
 	signal(SIGINT, display);
 	signal(SIGQUIT, display2);
@@ -18,44 +18,54 @@ int main (int argc, char * argv[])
 	return 0;
 }
 
-void sieve ()
+
+void sieve()
 {
-	int table[n];
-	int z = 0;
-	for (; z< n; z++)
-		table[z] = 1;
+
 	int i=2;
 	int j = 0;
-	int k =0;
-	int n_square = sqrt(n);
-	for (; i < n_square; i++)
-	{
-		if (table[i])
-		{
-			j = i*i;
-			do
-			{
-				table[j] = 0;
-				
-				k++;
-				
-				j = (i*i)+(i*k);
-			}while(j<n);
-		}
-	}
+	int u = 0;
+	int Table[n];
+	int z = 1;
 	
+		    
+	for (; i < n; i++) //sets all numbers to 'prime'
+		Table[i]=1;
+
+	for (i = 2 ; i <n;i++) //weeds out nonprime
+	{
+		if ( Table[i])
+		{	
+			for (j=i; i*j <n;j++)
+				Table[i*j]=0;
+		}
+			u =2;
+			while(u <i)
+			{ 
+				if (Table[u] )
+			  	{
+					max = u;
+					
+				}
+				u++;	   
+			}
+		
+	}
+	printf("%d ", max);
+
 }
 
-void display(int signum)
+
+
+
+void display()
 {
-	if (signum ==2)
-	printf("It worked\n");
+		printf("%d\n", max);
 }
-void display2(int signum)
+void display2()
 {
-	if (signum==3)
-	{
-	printf("It worked\n");
+
+	printf("%d\n", max);
 	exit(1);
-	}
+	
 }
