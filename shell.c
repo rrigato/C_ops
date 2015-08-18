@@ -18,24 +18,25 @@ int main ()
 	printf( " > "); 
 	while(fgets(input, size, stdin) && strcmp(input, Stop))
 	{	
-		printf( " > "); 
+		
 		Command = parse(input);
 		run(Command);
-		 i =0;
-		 z= 0;
-/* 		for (; Command[i][0] != '\0'; i++)
-			printf("%s\n" Command[i]);  */ //should print out array of c strings
+		 // i =0;
+		 // z= 0;
+ /*		for (; Command[i] != '\0'; i++)
+			printf("%s\n" ,Command[i]); */  //should print out array of c strings
 //		 z =0
 //		for (; Command[z][0] != '\0'; z++)
 //			free(Command[z])
 		free(Command);
+		printf( " > "); 
 		
 		
 	}
 	return 0;
 }
 
-void run(char * Arglist[])
+void run(char ** Arglist)
 {
 	int fork_return;
 	int wait_value;
@@ -47,7 +48,7 @@ void run(char * Arglist[])
 		}
 	else if (fork_return ==0)
 		{
-			execvp(Arglist[1], Arglist);
+			execvp(Arglist[0], Arglist);
 			perror("execvp failed");
 			exit(1);
 		}
