@@ -19,11 +19,22 @@ int main ()
 	while(fgets(input, SIZE-1, stdin) && strcmp(input, Stop))
 	{
 		int i = 0;
-		for (; i < SIZE-2;i++) //replaces newline character
-			if (input[i] = '\n')
-				input[i] = '\0';
+		for (; input[i] != '\n';i++); //replaces newline character
+		
+		if (input[i] == '\n')
+			input[i] = '\0';
+		printf(" %s \n", input); 
 
+
+		for (i =0; i != 20; i++)
+			printf("%d \n", input[i]);
+	
+			
 		Command = parse(input);
+		
+			printf("%s\n", Command[0]);
+printf("%s\n", Command[1]);
+	return 0;
 		run(Command);
 		free(Command);
 		printf( " > "); 
@@ -52,7 +63,7 @@ void run(char ** Arglist )
 	}
 	else 
 	{
-		wait_value = wait(NULL);
+		 wait(&wait_value);
 	}
 		
 	
