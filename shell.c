@@ -28,8 +28,6 @@ int main ()
 		free(Command);
 		printf( " > "); 
 		Command = NULL;
-		
-		
 	}
 	return 0;
 }
@@ -54,7 +52,7 @@ void run(char ** Arglist )
 	}
 	else 
 	{
-		wait(&wait_value);
+		wait_value = wait(NULL);
 	}
 		
 	
