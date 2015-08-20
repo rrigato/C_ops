@@ -23,18 +23,7 @@ int main ()
 		
 		if (input[i] == '\n')
 			input[i] = '\0';
-		printf(" %s \n", input); 
-
-
-		for (i =0; i != 20; i++)
-			printf("%d \n", input[i]);
-	
-			
 		Command = parse(input);
-		
-			printf("%s\n", Command[0]);
-printf("%s\n", Command[1]);
-	return 0;
 		run(Command);
 		free(Command);
 		printf( " > "); 
@@ -89,3 +78,4 @@ char** parse( char* str )
  
     return args;
 }
+
