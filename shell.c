@@ -12,7 +12,7 @@ int main ()
 	char input[SIZE];
 	signal(SIGINT, SIG_IGN);
 
-	char  Stop[] = "quit\n" ;
+	char  Stop[] = "exit\n" ;
 	
 	char** Command  = NULL; 
 	printf( " > "); 
@@ -57,7 +57,6 @@ void run(char ** Arglist )
 		
 	
 }
-
 
 char** parse( char* str )
 {
