@@ -17,8 +17,6 @@ int main ()
 		time_t get_time;
 		char *time_string = NULL;
 
-		//printf("%s\n", time_string);  this prints
-	
 	
 		int file_descriptor;
 		int i = 0, counter = 0;
@@ -26,20 +24,13 @@ int main ()
 		{
 					time(&get_time);
 					time_string = ctime(&get_time);
-					//printf("%s\n", time_string);
 				 file_descriptor  = open(time_fifo, O_WRONLY);
 				if (file_descriptor  == -1 )
 					{
 						perror("Unable to open named pipe");
 						exit(1);
 					}
-/* 				counter  = sizeof(time_string);
-				 i = 0;
-				while(i < counter)
-				{
-					write(file_descriptor, (time_string + i* sizeof(char)) , sizeof(char));
-					i++;
-				} */
+
 				 if (write(file_descriptor, time_string, strlen(time_string)+1) == -1 )
 					{
 						perror("Write error:");
