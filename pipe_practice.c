@@ -16,8 +16,14 @@ int main(int argc, char * argv[])
 	}
 	else
 	{
-		close(thepipe[1]);
-		dup2(thepipe[0],0);
-		execlp(argv[0],0);
+		close(thepipe[0]);
+		dup2(thepipe[1],1);
+		int thepipe2[2];
+		pipe(thepipe2);
+		return_value = fork();
+		if (return_value == 0)
+			execlp(argv[2],argv[2], NULL);
+		else;
+			wait();
 	}
 }
